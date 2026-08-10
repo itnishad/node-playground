@@ -1,0 +1,20 @@
+{
+  "name": "playground",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.ts",
+  "scripts": {
+    "start": "node dist/main.js",
+    "dev": "node --watch --env-file=.env src/main.ts",
+    "typecheck": "tsc --noEmit --strict src/main.ts",
+    "tscinit": "tsc --init"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^26.1.2",
+    "typescript": "^7.0.2"
+  }
+}
