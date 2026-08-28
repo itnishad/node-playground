@@ -35,5 +35,3 @@ app.post('/todos', (req, res) =>{
 app.listen(4000, ()=>{
     console.log("App is running on port 4000")
 })
-
-//TODO:amader basic todo project te express e convert korbo

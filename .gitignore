@@ -28,3 +28,6 @@ jspm_packages/
 *.njsproj
 *.sln
 *.swp
+
+# Custom
+.tmp
