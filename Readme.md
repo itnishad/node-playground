@@ -1,11 +1,10 @@
-# Todo API
+# Playground
 
-A small REST-style Todo API built with Node.js's built-in `http` module and TypeScript. Todo data is stored in memory, so it is reset whenever the server restarts.
+A small Express 5 + TypeScript learning playground. Node runs `src/server.ts` directly via native type-stripping — there is no build step.
 
 ## Requirements
 
-- Node.js 20 or later
-- npm
+- Node.js 22.18 or later (earlier 22.x needs `--experimental-strip-types`)
 
 ## Setup
 
@@ -13,86 +12,26 @@ A small REST-style Todo API built with Node.js's built-in `http` module and Type
 npm install
 ```
 
-Optionally create a `.env` file in the project root to select the listening port:
-
-```env
-PORT=4000
-```
-
-If `PORT` is not set, the server uses port `8000`.
-
 ## Run
-
-Start the development server with file watching:
 
 ```bash
 npm run dev
 ```
 
-The server is then available at `http://localhost:<PORT>`; for example, `http://localhost:4000` when using the included `.env` file.
+Starts the dev server with file watching at `http://localhost:5000`. The port is hardcoded in `src/server.ts`; the `PORT` value in `.env` is currently ignored.
 
-## Todo shape
+## Checks
 
-| Field | Type | Details |
-| --- | --- | --- |
-| `id` | string | UUID generated on creation |
-| `title` | string | Required when creating a todo |
-| `description` | string | Required when creating a todo |
-| `status` | boolean | Set to `false` on creation |
-| `createTime` | number | Creation timestamp in milliseconds |
-
-## Endpoints
-
-| Method | Path | Status | Description |
-| --- | --- | --- | --- |
-| `GET` | `/todos` | Implemented | Returns all todos as an array. |
-| `GET` | `/todos/:id` | Implemented | Returns a todo by ID. |
-| `POST` | `/todos` | Implemented | Creates a todo. |
-| `PUT` | `/todos` | Not implemented | Placeholder only; it falls through to a 404 response. |
-| `DELETE` | `/todos/:id` | Implemented | Removes a todo by ID. |
-
-### Create a todo
-
-`POST /todos`
-
-```json
-{
-  "title": "Buy groceries",
-  "description": "Milk, eggs, and bread"
-}
+```bash
+npx tsc
 ```
 
-Both `title` and `description` are required. A successful request returns `201`:
+Typechecks everything via `tsconfig.json` (no emit). The `npm run typecheck` script is currently broken under TypeScript 7, and `npm start` is an unimplemented placeholder — nothing compiles to `dist/`.
 
-```json
-{
-  "status": true,
-  "code": 201,
-  "messages": "Successfully created",
-  "data": {
-    "id": "generated-uuid",
-    "title": "Buy groceries",
-    "description": "Milk, eggs, and bread",
-    "status": false,
-    "createTime": 0
-  }
-}
-```
+## Project layout
 
-### Get one todo
-
-`GET /todos/:id`
-
-When found, the response contains `status`, `code`, `message`, and `data`. If no matching todo exists, the API responds with a body containing a `404` code and an explanatory message.
-
-### Delete a todo
-
-`DELETE /todos/:id`
-
-Returns a success message after removing every in-memory todo whose ID matches the path value. The current implementation reports success even when the ID did not match an existing todo.
-
-## Notes
-
-- Requests with an unknown path return `404` and `Route Not Found`.
-- Invalid JSON or unexpected server errors return `500`.
-- The `response` helper currently always writes HTTP status `200`, including the not-found response from `GET /todos/:id`; its JSON body still contains `code: 404`.
+- `src/app.ts` — app setup: JSON/urlencoded parsers, `/static` (serves `public/`), routers mounted at `/v1/users` and `/v1/todos`, and a terminal error handler returning 500 JSON.
+- `src/server.ts` — bootstrap plus `unhandledRejection` / `uncaughtException` shutdown handling.
+- `src/routers/` — `users.router.ts` (`GET /` deliberately throws to exercise the error handler) and `todos.router.ts` (empty stub). No real endpoints exist yet.
+- `src/{services,controllers,configs,errors,middlewares}/` — empty placeholders for upcoming work.
+- `.tmp/` — gitignored scratch space for learning notes; never committed.
